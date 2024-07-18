@@ -68,15 +68,6 @@
             </select>
         </div>
 
-<!--        <div class="flex items-center space-x-4">-->
-<!--            <span><b>일찍 가고 싶은 날의 출근 시간: </b></span>-->
-<!--            <input type="number" placeholder="08" class="w-16 p-2 border rounded" id="check-in-hour" value="09" required>-->
-<!--            <span>:</span>-->
-<!--            <input type="number" placeholder="00" class="w-16 p-2 border rounded minute-input" id="check-in-minutes"  value="00" required>-->
-<!--        </div>-->
-
-
-
         <!-- 제출 버튼 -->
         <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded mt-4">Submit</button>
     </form>
@@ -100,6 +91,7 @@
 
         return `남은 근무 시간: ${hours}시간 ${remainingMinutes}분`;
     }
+
 
     document.querySelectorAll('.status-select').forEach((select, index) => {
         select.addEventListener('change', function() {
