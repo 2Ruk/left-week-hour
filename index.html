@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Hours Tracker</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-8">
+<div class="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6">
+    <h1 class="text-2xl font-bold mb-4">Work Hours Tracker</h1>
+
+    <form id="hours-form" class="space-y-4">
+        <!-- 반복되는 입력 필드 -->
+        <div class="flex items-center space-x-4">
+            <input type="number" placeholder="08" class="w-16 p-2 border rounded hour-input" value="08" required>
+                <span>:</span>
+                <input type="number" placeholder="00" class="w-16 p-2 border rounded minute-input" value="00" required>
+                    <select class="w-32 p-2 border rounded status-select">
+                        <option selected value="work">근무</option>
+                        <option value="vacation">휴가</option>
+                        <option value="halfday">반차</option>
+                    </select>
+        </div>
+
+        <!-- 5줄 반복 -->
+        <div class="flex items-center space-x-4">
+            <input type="number" placeholder="08" class="w-16 p-2 border rounded hour-input" value="08" required>
+                <span>:</span>
+                <input type="number" placeholder="00" class="w-16 p-2 border rounded minute-input" value="00" required>
+                    <select class="w-32 p-2 border rounded status-select">
+                        <option selected value="work">근무</option>
+                        <option value="vacation">휴가</option>
+                        <option value="halfday">반차</option>
+                    </select>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <input type="number" placeholder="08" class="w-16 p-2 border rounded hour-input" value="08" required>
+                <span>:</span>
+                <input type="number" placeholder="00" class="w-16 p-2 border rounded minute-input" value="00" required>
+                    <select class="w-32 p-2 border rounded status-select">
+                        <option selected value="work">근무</option>
+                        <option value="vacation">휴가</option>
+                        <option value="halfday">반차</option>
+                    </select>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <input type="number" placeholder="08" class="w-16 p-2 border rounded hour-input" value="08" required>
+                <span>:</span>
+                <input type="number" placeholder="00" class="w-16 p-2 border rounded minute-input" value="00" required>
+                    <select class="w-32 p-2 border rounded status-select">
+                        <option selected value="work">근무</option>
+                        <option value="vacation">휴가</option>
+                        <option value="halfday">반차</option>
+                    </select>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <input type="number" placeholder="08" class="w-16 p-2 border rounded hour-input" value="08" required>
+            <span>:</span>
+            <input type="number" placeholder="00" class="w-16 p-2 border rounded minute-input" value="00" required>
+            <select class="w-32 p-2 border rounded status-select">
+                <option selected value="work">근무</option>
+                <option value="vacation">휴가</option>
+                <option value="halfday">반차</option>
+            </select>
+        </div>
+
+<!--        <div class="flex items-center space-x-4">-->
+<!--            <span><b>일찍 가고 싶은 날의 출근 시간: </b></span>-->
+<!--            <input type="number" placeholder="08" class="w-16 p-2 border rounded" id="check-in-hour" value="09" required>-->
+<!--            <span>:</span>-->
+<!--            <input type="number" placeholder="00" class="w-16 p-2 border rounded minute-input" id="check-in-minutes"  value="00" required>-->
+<!--        </div>-->
+
+
+
+        <!-- 제출 버튼 -->
+        <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded mt-4">Submit</button>
+    </form>
+
+    <div id="result" class="mt-4 text-xl font-bold"></div>
+</div>
+
+<script>
+    const leftHours = 40;
+    const minutesUnit = 60;
+    function hourToMinutes(hours){
+        return hours * minutesUnit;
+    }
+
+    function minutesToHourMessage(minutes){
+        const hours = Math.floor(minutes / minutesUnit);
+        const remainingMinutes = minutes % minutesUnit;
+        if(hours <= 0 && remainingMinutes <= 0){
+            return `근무 완료!!`;
+        }
+
+        return `남은 근무 시간: ${hours}시간 ${remainingMinutes}분`;
+    }
+
+    document.querySelectorAll('.status-select').forEach((select, index) => {
+        select.addEventListener('change', function() {
+            const hourInput = document.querySelectorAll('.hour-input')[index];
+            const minuteInput = document.querySelectorAll('.minute-input')[index];
+
+            if (select.value === 'vacation') {
+                hourInput.value = 0;
+                minuteInput.value = 0;
+                hourInput.disabled = true;
+                minuteInput.disabled = true;
+            } else {
+                hourInput.disabled = false;
+                minuteInput.disabled = false;
+            }
+        });
+    });
+
+    document.getElementById('hours-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        let leftMinutes = leftHours * minutesUnit;
+
+        // 각 입력 필드를 순회하여 시간을 계산
+        document.querySelectorAll('.hour-input').forEach((hourInput, index) => {
+            const minuteInput = document.querySelectorAll('.minute-input')[index];
+            const statusSelect = document.querySelectorAll('.status-select')[index];
+
+            let hours = parseInt(hourInput.value) || 0;
+            let minutes = parseInt(minuteInput.value) || 0;
+
+            // 근무 상태에 따라 시간을 계산
+            switch (statusSelect.value) {
+                case 'work':
+                    leftMinutes -= hourToMinutes(hours) + minutes;
+                    break;
+                case 'vacation':
+                    leftMinutes -=  hourToMinutes(8);
+                    break;
+                case 'halfday':
+                    leftMinutes -=  hourToMinutes(4);
+                    leftMinutes -= hourToMinutes(hours) + minutes;
+                    break;
+            }
+        });
+
+        const message = minutesToHourMessage(leftMinutes);
+
+        document.getElementById('result').innerText = `${message}`;
+    });
+</script>
+</body>
+</html>
